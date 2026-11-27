@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HappyDriver · 演示视频</title>
+<link rel="stylesheet" href="video.css">
+</head>
+<body>
+<div id="stage">
+  <div class="bg" aria-hidden="true">
+    <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+    <div class="grid"></div>
+  </div>
+
+  <div class="chrome" aria-hidden="true">
+    <div class="progress"><i id="progressBar"></i></div>
+    <div class="corner-brand" id="cornerBrand">
+      <span class="mini-mark"><svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="url(#mg)"/><defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs><path d="M10 26c5-1 6-10 12-9 5 1 4 6 8 5" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="10" cy="26" r="2.6" fill="#fff"/><circle cx="30" cy="22" r="2.6" fill="#fff"/></svg></span>
+      <span>HappyDriver</span>
+    </div>
+    <div class="corner-event">2026 高德 AI 大赛 · 形式 B</div>
+    <div class="chapter" id="chapter">明早几点走，今晚就知道</div>
+  </div>
+
+  <!-- 0 开场 slate -->
+  <section class="scene slate" id="slate">
+    <div class="slate-inner">
+      <div class="slate-mark">
+        <svg viewBox="0 0 140 140" fill="none">
+          <defs><linearGradient id="slg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs>
+          <rect x="10" y="10" width="120" height="120" rx="36" fill="url(#slg)"/>
+          <path d="M38 88c16-4 18-32 37-29 15 2 12 19 27 15" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="38" cy="88" r="8" fill="#fff"/><circle cx="102" cy="74" r="8" fill="#fff"/>
+        </svg>
+      </div>
+      <div class="slate-name">HappyDriver</div>
+      <div class="slate-sub">2026 高德 AI 大赛 · 形式 B</div>
+      <div class="slate-line"><i></i></div>
+    </div>
+  </section>
+
+  <!-- 1 标题 -->
+  <section class="scene" id="scene-s1">
+    <div class="s1-wrap">
+      <div class="s1-badge">未来 7 天通勤出发预测</div>
+      <h1 class="s1-title">Happy<span>Driver</span></h1>
+      <p class="s1-tag">明早几点走，<em>今晚</em>就知道</p>
+      <p class="s1-desc">天气 · 路况 · 历史曲线 · 突发事件，一次算清<br>出门前收到结论，而不是上车后才看到一片红</p>
+    </div>
+    <svg class="s1-route" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+      <path class="route-path" d="M-40 820 C 260 760, 360 500, 640 540 S 1120 820, 1400 640 S 1760 300, 1980 360" fill="none" stroke="rgba(120,180,255,.5)" stroke-width="3" stroke-linecap="round"/>
+      <path class="route-path p2" d="M-40 900 C 300 860, 520 640, 820 700 S 1260 940, 1540 760 S 1820 480, 1980 520" fill="none" stroke="rgba(126,224,168,.28)" stroke-width="2" stroke-dasharray="8 14"/>
+    </svg>
+  </section>
+
+  <!-- 2 问题 -->
+  <section class="scene" id="scene-s2">
+    <div class="two">
+      <div class="col">
+        <div class="kick">07:00 · 上车才打开地图</div>
+        <h2 class="h-xl">路线已经<br><span class="rose">红了</span></h2>
+        <p class="muted">看到拥堵，能做的只剩换一条同样堵的路。<br>而「几点出门」这件事，早就无法更改。</p>
+        <div class="metric">
+          <div class="metric-num"><span id="etaNum">38</span><em>分钟</em></div>
+          <div class="metric-sub">预计到达 <b id="etaClock">08:20</b> · 比昨天多 22 分钟</div>
+        </div>
+      </div>
+      <div class="col visual">
+        <div class="phone" id="phone2">
+          <img src="assets/map-phone.png" alt="通勤路线">
+          <div class="phone-shade"></div>
+          <div class="phone-badge">🚧 前方拥堵 2.4 km</div>
+          <div class="phone-notch"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 解法 -->
+  <section class="scene" id="scene-s3">
+    <div class="two reverse">
+      <div class="col visual">
+        <div class="app-shot" id="heroShot">
+          <img src="assets/hero.png" alt="HappyDriver 晨间播报">
+        </div>
+        <div class="float-chip c1">🌦 天气 · 暴雨</div>
+        <div class="float-chip c2">🚦 路况 · 事故</div>
+        <div class="float-chip c3">📈 历史 · 早高峰</div>
+      </div>
+      <div class="col">
+        <div class="kick">昨晚 21:00 · 已经算好</div>
+        <h2 class="h-xl">明早<br><span class="blue">07:50</span> 出发</h2>
+        <p class="muted">比平时早 10 分钟，预计 08:57 到公司。<br>结论、原因、把握，一次给全。</p>
+        <div class="tags">
+          <span class="tag mint">把握 72%</span>
+          <span class="tag">低风险 · 37</span>
+          <span class="tag">路上 1 小时 2 分</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 七天 -->
+  <section class="scene" id="scene-s4">
+    <div class="s4-head">
+      <div class="kick">未来 7 天 · 每天一个建议</div>
+      <h2 class="h-lg">不是「今天堵不堵」，而是「这天几点走」</h2>
+    </div>
+    <div class="week" id="weekRow">
+      <div class="d-card past">
+        <div class="d-top"><b>今天</b><span>11/27</span></div>
+        <div class="d-ico">☀️</div>
+        <div class="d-time">已过</div>
+        <div class="d-meta">62 分钟</div>
+        <div class="d-bar low"></div>
+      </div>
+      <div class="d-card">
+        <div class="d-top"><b>周六</b><span>11/28</span></div>
+        <div class="d-ico">☀️</div>
+        <div class="d-time">08:05</div>
+        <div class="d-meta">46 分钟</div>
+        <div class="d-bar low"></div>
+      </div>
+      <div class="d-card">
+        <div class="d-top"><b>后天</b><span>11/29</span></div>
+        <div class="d-ico">☀️</div>
+        <div class="d-time">08:05</div>
+        <div class="d-meta">45 分钟</div>
+        <div class="d-bar low"></div>
+      </div>
+      <div class="d-card active">
+        <div class="d-top"><b>周一</b><span>11/30</span></div>
+        <div class="d-ico">☀️</div>
+        <div class="d-time">07:50</div>
+        <div class="d-meta">62 分钟</div>
+        <div class="d-bar low"></div>
+      </div>
+      <div class="d-card">
+        <div class="d-top"><b>周二</b><span>12/01</span></div>
+        <div class="d-ico">⛅</div>
+        <div class="d-time">07:50</div>
+        <div class="d-meta">62 分钟</div>
+        <div class="d-bar mid"></div>
+      </div>
+      <div class="d-card rain">
+        <div class="d-top"><b>周三</b><span>12/02</span></div>
+        <div class="d-ico">🌧️</div>
+        <div class="d-time">07:50</div>
+        <div class="d-meta">62 分钟</div>
+        <div class="d-bar high"></div>
+        <div class="d-flag">暴雨</div>
+      </div>
+      <div class="d-card">
+        <div class="d-top"><b>周四</b><span>12/03</span></div>
+        <div class="d-ico">☀️</div>
+        <div class="d-time">07:50</div>
+        <div class="d-meta">外推 · 61 分钟</div>
+        <div class="d-bar low"></div>
+      </div>
+    </div>
+    <div class="s4-note">第 5–7 天为趋势外推，界面明确标注，不假装能预知七天后的暴雨。</div>
+  </section>
+
+  <!-- 5 暴雨 / 事故 -->
+  <section class="scene" id="scene-s5">
+    <div class="s5-head">
+      <div class="kick">明早 07:30 · 打开地图的那一刻</div>
+      <h2 class="h-lg">暴雨 + 事故，系统会<b class="mint">改口</b></h2>
+    </div>
+    <div class="browser" id="browser5">
+      <div class="browser-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="url">jiwangreal.github.io/commute-oracle</span>
+        <span class="live"><i></i>LIVE</span>
+      </div>
+      <div class="browser-body">
+        <img src="assets/app-storm.png" alt="HappyDriver 注入暴雨与事故">
+        <div class="spotlight"></div>
+      </div>
+    </div>
+    <div class="time-flow">
+      <span class="time-chip" id="t50">07:50</span>
+      <span class="arrow">→</span>
+      <span class="time-chip" id="t35">07:35</span>
+      <span class="arrow">→</span>
+      <span class="time-chip hot" id="t25">07:25</span>
+    </div>
+    <div class="push" id="pushCard">
+      <div class="push-head"><span class="push-app"><i></i>HappyDriver</span><span>现在</span></div>
+      <b>明早建议 07:25 出发</b>
+      <p>暴雨 + 京通快速事故，预计 08:53 到，比平时早 35 分钟。</p>
+      <span class="push-cta">点开看路线 →</span>
+    </div>
+  </section>
+
+  <!-- 6 路线 -->
+  <section class="scene" id="scene-s6">
+    <div class="s6-head">
+      <div class="kick">路线 · 备选 · 地铁</div>
+      <h2 class="h-lg">三条路线，按真实路况排序</h2>
+    </div>
+    <div class="map-wrap" id="mapWrap">
+      <img src="assets/map.png" alt="高德路线图">
+      <div class="map-caption">路线颜色来自高德 TMC 实时路况</div>
+    </div>
+    <div class="route-cards">
+      <div class="r-card r1"><span class="r-ico">🚗</span><div><b>最快路线</b><small>18.0 km · 建议</small></div><strong>61<em>分</em></strong></div>
+      <div class="r-card r2"><span class="r-ico">🛣️</span><div><b>备选 · 少拥堵</b><small>18.5 km · +1 分</small></div><strong>62<em>分</em></strong></div>
+      <div class="r-card r3"><span class="r-ico">🚇</span><div><b>地铁方案</b><small>八通线 → 1 号线 · ¥5</small></div><strong>37<em>分</em></strong></div>
+    </div>
+  </section>
+
+  <!-- 7 能力 -->
+  <section class="scene" id="scene-s7">
+    <div class="s7-head">
+      <div class="kick">真实调用 · 不是死数据</div>
+      <h2 class="h-lg">全部来自高德开放平台</h2>
+    </div>
+    <div class="caps" id="caps">
+      <div class="cap"><span>🌦️</span><b>天气实况 + 预报</b><small>未来 4 天，驱动天气系数</small></div>
+      <div class="cap"><span>🚦</span><b>交通态势</b><small>家 / 走廊 / 公司三点采样</small></div>
+      <div class="cap"><span>🧭</span><b>驾车路径规划 v5</b><small>耗时 + TMC 红黄绿</small></div>
+      <div class="cap"><span>🚇</span><b>公交路径规划 v5</b><small>雨天改乘地铁</small></div>
+      <div class="cap"><span>🗺️</span><b>JS API 2.0</b><small>地图 / 路况图层 / 路线</small></div>
+      <div class="cap"><span>📍</span><b>地理编码</b><small>地址 → 坐标</small></div>
+      <div class="cap"><span>🚀</span><b>URI API</b><small>一键唤起导航</small></div>
+      <div class="cap"><span>🤖</span><b>amap-gui CLI</b><small>Agent 夜间巡航</small></div>
+    </div>
+    <div class="s7-foot"><span class="pulse"></span>每次刷新并行调用 <b>7</b> 个接口，页面内可展开原始返回</div>
+  </section>
+
+  <!-- 8 收尾 -->
+  <section class="scene" id="scene-s8">
+    <div class="s8-wrap">
+      <div class="s8-mark">
+        <svg viewBox="0 0 140 140" fill="none"><rect x="10" y="10" width="120" height="120" rx="36" fill="url(#s8g)"/><defs><linearGradient id="s8g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs><path d="M38 88c16-4 18-32 37-29 15 2 12 19 27 15" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="38" cy="88" r="8" fill="#fff"/><circle cx="102" cy="74" r="8" fill="#fff"/></svg>
+      </div>
+      <div class="s8-name">HappyDriver</div>
+      <div class="s8-tag">明早几点走，今晚就知道</div>
+      <div class="s8-qr"><img src="assets/qr.png" alt="扫码体验"><div><b>扫码体验</b><span>jiwangreal.github.io/commute-oracle</span></div></div>
+      <div class="s8-foot">数据来自高德开放平台 · 预报第 5–7 天为趋势外推 · 事故与暴雨为演示注入</div>
+    </div>
+  </section>
+</div>
+
+<script src="timeline.js"></script>
+<script src="dist/main.js"></script>
+</body>
+</html>

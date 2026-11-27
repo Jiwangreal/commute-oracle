@@ -495,10 +495,10 @@
 
     const inj = state.injections[d.key];
     if (inj && inj.crash) {
-      ev.push(evidence('🚧', '突发', '演示注入', '京通快速四惠段事故，预计消散前多花 ' + Math.round(d.breakdown.incident) + ' 分钟。'));
+      ev.push(evidence('🚧', '突发', '演示注入', '天元中路百家湖段事故，预计消散前多花 ' + Math.round(d.breakdown.incident) + ' 分钟。'));
     }
     if (inj && inj.metro) {
-      ev.push(evidence('🚇', '备选', '演示注入', '地铁八通线信号故障，地铁方案 +18 分钟，建议仍以驾车为主。'));
+      ev.push(evidence('🚇', '备选', '演示注入', '地铁 1 号线天元路区段信号故障，地铁方案 +18 分钟，建议仍以驾车为主。'));
     }
     $('#evidence').innerHTML = ev.join('');
   }
@@ -728,7 +728,7 @@
     if (d && ((kind === 'rain' && inj.rain) || (kind === 'crash' && inj.crash))) {
       const bits = [];
       if (inj.rain) bits.push('暴雨');
-      if (inj.crash) bits.push('京通快速事故');
+      if (inj.crash) bits.push('天元中路事故');
       const early = d.deltaMin > 0 ? '比平时早 ' + d.deltaMin + ' 分钟' : '按这个点走不用提前';
       showNotification('建议 ' + d.depart + ' 出发', bits.join(' + ') + '，' + early + '，预计 ' + d.arrive + ' 到。', 11000);
     } else if (kind === 'metro' && inj.metro) {
@@ -752,7 +752,7 @@
     const nd = day();
     const bits = [];
     if (state.injections[nd.key] && state.injections[nd.key].rain) bits.push('暴雨');
-    if (state.injections[nd.key] && state.injections[nd.key].crash) bits.push('京通快速事故');
+    if (state.injections[nd.key] && state.injections[nd.key].crash) bits.push('天元中路事故');
     const reason = bits.length ? bits.join(' + ') + '，' : (nd.weatherFactor > 1.05 ? nd.weather.day + '，' : '');
     const early = nd.deltaMin > 0 ? '比平时早 ' + nd.deltaMin + ' 分钟' : '可以按平时时间走';
     showNotification('今天建议 ' + nd.depart + ' 出发', reason + '预计 ' + nd.arrive + ' 到，' + early + '。', 14000);
@@ -859,7 +859,7 @@
     btn.disabled = true;
     btn.textContent = '解析地址…';
     try {
-      const [h, w] = await Promise.all([Data.geocode(home, '北京'), Data.geocode(work, '北京')]);
+      const [h, w] = await Promise.all([Data.geocode(home, APP_CONFIG.scenario.city), Data.geocode(work, APP_CONFIG.scenario.city)]);
       state.scenario.home = { ...state.scenario.home, name: h.name, short: shortName(home), address: home, coord: h.coord, adcode: h.adcode };
       state.scenario.work = { ...state.scenario.work, name: w.name, short: shortName(work), address: work, coord: w.coord, adcode: w.adcode };
       state.scenario.usualDepart = depart;

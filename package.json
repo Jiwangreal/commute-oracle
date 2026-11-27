@@ -1,0 +1,19 @@
+{
+  "name": "happydriver",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HappyDriver — 未来 7 天通勤出发预测与主动播报",
+  "scripts": {
+    "video:build": "esbuild video/src/main.js --bundle --format=iife --outfile=video/dist/main.js",
+    "video:record": "node scripts/record-video.mjs",
+    "video": "npm run video:build && npm run video:record"
+  },
+  "dependencies": {
+    "motion": "^14.14.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright-core": "^1.63.0"
+  }
+}

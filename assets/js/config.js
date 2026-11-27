@@ -2,36 +2,36 @@
 window.APP_CONFIG = {
   amapKey: '8a419b3cb914d55c5cee180d5eb7c379',
 
-  /* 示例通勤：通州果园 → 国贸银泰中心，京通快速走廊 */
+  /* 示例通勤：南京江宁招商名筑 → 中科曙光（诚信大道），天元路走廊，红绿灯密集 */
   scenario: {
     home: {
-      name: '果园地铁站',
-      short: '果园',
-      address: '北京市通州区果园地铁站',
-      coord: [116.646621, 39.893329],
-      adcode: '110112',
-      city: '北京'
+      name: '招商名筑',
+      short: '招商名筑',
+      address: '南京市江宁区招商名筑',
+      coord: [118.889072, 31.962930],
+      adcode: '320115',
+      city: '南京'
     },
     work: {
-      name: '北京银泰中心',
-      short: '银泰中心',
-      address: '北京市朝阳区建国门外大街2号银泰中心',
-      coord: [116.459151, 39.907698],
-      adcode: '110105',
-      city: '北京'
+      name: '中科曙光',
+      short: '中科曙光',
+      address: '南京市江宁区诚信大道509号',
+      coord: [118.804678, 31.904539],
+      adcode: '320115',
+      city: '南京'
     },
     usualDepart: '08:00',
     targetArrive: '09:00',
     bufferMin: 6,
-    citycode: '010',
+    citycode: '025',
     mode: 'driving'
   },
 
-  /* 走廊采样点：家 / 中途（四惠）/ 公司，用于交通态势 */
+  /* 走廊采样点：家 / 中途（天元中路）/ 公司，用于交通态势 */
   corridor: [
-    { name: '果园', coord: [116.646621, 39.893329], radius: 2200 },
-    { name: '四惠', coord: [116.517, 39.905], radius: 2600 },
-    { name: '国贸', coord: [116.459151, 39.907698], radius: 2000 }
+    { name: '招商名筑', coord: [118.889072, 31.962930], radius: 2200 },
+    { name: '天元中路', coord: [118.8497, 31.933607], radius: 2600 },
+    { name: '中科曙光', coord: [118.804678, 31.904539], radius: 2000 }
   ],
 
   /* 走廊早高峰历史拥堵系数（星期 × 时刻），可由真实历史行程回归替换 */
@@ -62,16 +62,16 @@ window.APP_CONFIG = {
   injections: {
     crash: {
       id: 'crash',
-      label: '京通快速 四惠段 事故',
+      label: '天元中路 百家湖段 事故',
       extraMin: 12,
       startMin: 7 * 60 + 40,
       decayMin: 110,
-      coord: [116.517, 39.905],
+      coord: [118.8497, 31.933607],
       risk: 28
     },
     metro: {
       id: 'metro',
-      label: '地铁八通线 信号故障',
+      label: '地铁 1 号线 天元路区段 信号故障',
       extraMin: 18,
       risk: 18
     }

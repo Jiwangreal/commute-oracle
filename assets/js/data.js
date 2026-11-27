@@ -340,7 +340,7 @@
   }
 
   async function geocode(address, city) {
-    const raw = await request(api.geocode, { address, city: city || '北京' }, '地理编码');
+    const raw = await request(api.geocode, { address, city: city || (window.APP_CONFIG && APP_CONFIG.scenario.city) || '' }, '地理编码');
     const g = raw.geocodes && raw.geocodes[0];
     if (!g) throw new Error('没找到这个地址，换个更具体的？');
     const [lng, lat] = g.location.split(',').map(Number);
