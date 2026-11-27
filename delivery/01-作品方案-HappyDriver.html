@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HappyDriver · 作品方案文档</title>
+<style>
+:root{
+  --ink:#16213a;--muted:#6d7891;--line:rgba(22,33,58,.1);
+  --brand:#2f6bff;--brand-soft:#eaf1ff;--mint:#12b76a;--amber:#f5a524;--rose:#ff5a6a;--violet:#8b5cf6;
+  --bg:#f4f5fa;--card:#fff;--font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none}
+h1,h2,h3,h4,p{margin:0}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.bg i{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+.bg i:nth-child(1){width:600px;height:600px;left:-200px;top:-200px;background:#cfe0ff}
+.bg i:nth-child(2){width:520px;height:520px;right:-180px;top:120px;background:#ffe6d2}
+.bg i:nth-child(3){width:520px;height:520px;left:40%;bottom:-300px;background:#d9f6e8}
+
+.doc-top{max-width:1120px;margin:0 auto;padding:34px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.doc-brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.doc-brand .mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#6aa8ff,#2f6bff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 10px 20px -12px #2f6bff}
+.doc-brand small{display:block;font-size:10px;letter-spacing:.14em;color:var(--muted);font-weight:600}
+.doc-actions{display:flex;gap:8px}
+.doc-actions a{font-size:12px;padding:7px 12px;border-radius:9px;background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:0 4px 12px -8px rgba(0,0,0,.2)}
+
+.layout{max-width:1120px;margin:0 auto;padding:22px 24px 60px;display:grid;grid-template-columns:206px minmax(0,1fr);gap:28px;align-items:start}
+.toc{position:sticky;top:24px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 30px -24px rgba(0,0,0,.3)}
+.toc b{display:block;font-size:11px;letter-spacing:.14em;color:var(--muted);margin-bottom:8px}
+.toc a{display:block;font-size:12.5px;padding:5px 8px;border-radius:7px;color:#46536b}
+.toc a:hover{background:#f2f5fc;color:var(--brand)}
+.toc .sub{padding-left:18px;font-size:11.5px;color:var(--muted)}
+
+article{min-width:0}
+.hero{background:linear-gradient(126deg,#0b142e 0%,#152a5e 45%,#2650c4 100%);border-radius:28px;padding:34px 34px 30px;color:#fff;position:relative;overflow:hidden;box-shadow:0 30px 60px -34px rgba(21,42,94,.8)}
+.hero::after{content:"";position:absolute;width:520px;height:520px;right:-160px;top:-240px;border-radius:50%;background:radial-gradient(circle,rgba(120,190,255,.5),transparent 64%)}
+.hero .kicker{font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.6);font-weight:700}
+.hero h1{font-size:clamp(30px,4.6vw,44px);line-height:1.2;letter-spacing:-.02em;margin:10px 0 8px;font-weight:800}
+.hero p{color:rgba(255,255,255,.78);font-size:14px;max-width:640px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.hero .meta span{font-size:11.5px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
+.hero .meta b{color:#9ff0c2}
+
+.card{background:#fff;border:1px solid rgba(22,33,58,.06);border-radius:22px;padding:26px 28px;margin-top:16px;box-shadow:0 16px 40px -30px rgba(0,0,0,.35)}
+h2{font-size:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+h2 .num{width:26px;height:26px;border-radius:9px;background:var(--brand-soft);color:var(--brand);font-size:12px;display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+h3{font-size:15px;margin:22px 0 6px;color:var(--ink)}
+h3::before{content:"";display:inline-block;width:6px;height:6px;border-radius:2px;background:var(--brand);margin-right:8px;vertical-align:2px}
+p{color:#33415c;margin:8px 0}
+.lead{color:var(--muted);font-size:13.5px}
+small{color:var(--muted)}
+b.hl{background:linear-gradient(180deg,transparent 62%,#ffe08a 62%);padding:0 2px}
+
+.quote{margin:16px 0;padding:14px 18px;border-left:3px solid var(--brand);background:linear-gradient(90deg,#f2f6ff,transparent);border-radius:0 12px 12px 0;font-size:14.5px;color:#22345c}
+.quote b{color:var(--brand)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.mini{border:1px solid var(--line);border-radius:14px;padding:13px 15px;background:#fbfcff}
+.mini b{display:block;font-size:13px;margin-bottom:2px}
+.mini span{font-size:12px;color:var(--muted)}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.8px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;background:#fafbfe;font-weight:700}
+tr:last-child td{border-bottom:0}
+td b{color:#1f2f52}
+
+.flow{display:flex;flex-direction:column;gap:0;margin:14px 0}
+.flow .step{display:grid;grid-template-columns:96px 1fr;gap:14px;position:relative;padding-bottom:16px}
+.flow .step:not(:last-child)::before{content:"";position:absolute;left:95px;top:26px;bottom:0;width:1px;background:var(--line)}
+.flow .t{font-size:11.5px;color:var(--brand);font-weight:700;text-align:right;padding-top:3px}
+.flow .c{position:relative;padding-left:16px}
+.flow .c::before{content:"";position:absolute;left:-4px;top:7px;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid var(--brand)}
+.flow .c b{font-size:13.5px}
+.flow .c p{font-size:12.5px;color:var(--muted);margin:2px 0 0}
+
+.formula{background:#0f1730;color:#d9e4ff;border-radius:14px;padding:16px 18px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.9;overflow:auto}
+.formula em{color:#9ff0c2;font-style:normal}
+.formula span{color:#ffd69a}
+
+.pillrow{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pill{font-size:11.5px;padding:4px 10px;border-radius:999px;background:#f2f5fc;border:1px solid var(--line);color:#46536b}
+.pill.b{background:var(--brand-soft);color:#2b52c7;border-color:rgba(47,107,255,.2)}
+.pill.g{background:#e9f9f1;color:#0b8a52;border-color:rgba(18,183,106,.2)}
+.pill.r{background:#fff1f2;color:#b02334;border-color:rgba(255,90,106,.2)}
+.pill.v{background:#f3efff;color:#6841d8;border-color:rgba(139,92,246,.2)}
+
+.arch{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
+.arch .layer{border:1px dashed var(--line);border-radius:14px;padding:12px 15px;background:#fbfcff}
+.arch .layer b{font-size:12px;letter-spacing:.02em}
+.arch .layer span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.arch .arrow{text-align:center;color:#b5bfd2;font-size:14px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.stat{background:#fbfcff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:24px;letter-spacing:-.03em;color:var(--brand)}
+.stat span{font-size:11.5px;color:var(--muted)}
+
+.check{list-style:none;padding:0;margin:10px 0}
+.check li{position:relative;padding-left:24px;font-size:13px;margin:7px 0}
+.check li::before{content:"✓";position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;background:#e9f9f1;color:#0b8a52;font-size:10px;display:grid;place-items:center;font-weight:800}
+
+.footer{max-width:1120px;margin:0 auto;padding:0 24px 40px;font-size:11px;color:var(--muted);text-align:center}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;padding:16px}
+  .toc{position:static;display:flex;flex-wrap:wrap;gap:4px}
+  .toc b{width:100%}
+  .toc a{font-size:11.5px}
+  .grid2,.stats{grid-template-columns:1fr 1fr}
+}
+@media print{
+  body{background:#fff}
+  .bg,.toc,.doc-top,.doc-actions{display:none}
+  .layout{display:block;padding:0;max-width:none}
+  .card,.hero{box-shadow:none;break-inside:avoid}
+  .card{border-color:#ddd}
+  .hero{background:#10204a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .formula{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="doc-top">
+  <div class="doc-brand">
+    <span class="mark">◔</span>
+    <div>HappyDriver<small>通勤先知 · 2026 高德 AI 大赛</small></div>
+  </div>
+  <div class="doc-actions">
+    <a href="../index.html">打开 Demo →</a>
+    <a href="02-演示视频-HappyDriver.mp4">看视频</a>
+    <a href="01-作品方案-HappyDriver.md">Markdown</a>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc">
+    <b>目录</b>
+    <a href="#s0">一页速览</a>
+    <a href="#s1">1 选题背景</a>
+    <a class="sub" href="#s1-1">1.1 业务背景</a>
+    <a class="sub" href="#s1-2">1.2 现有产品空白</a>
+    <a class="sub" href="#s1-3">1.3 为什么是现在</a>
+    <a class="sub" href="#s1-4">1.4 一个具体的早晨</a>
+    <a href="#s2">2 项目介绍</a>
+    <a class="sub" href="#s2-1">2.1 作品目标</a>
+    <a class="sub" href="#s2-2">2.2 用户旅程</a>
+    <a class="sub" href="#s2-3">2.3 功能说明</a>
+    <a class="sub" href="#s2-4">2.4 技术架构</a>
+    <a class="sub" href="#s2-5">2.5 预测模型</a>
+    <a class="sub" href="#s2-6">2.6 降级与边界</a>
+    <a href="#s3">3 商业价值</a>
+    <a class="sub" href="#s3-1">3.1 解决谁的问题</a>
+    <a class="sub" href="#s3-2">3.2 价值在哪</a>
+    <a class="sub" href="#s3-3">3.3 如何使用</a>
+    <a class="sub" href="#s3-4">3.4 落地计划</a>
+    <a href="#s4">4 能力清单</a>
+    <a class="sub" href="#s4-1">4.1 核心能力</a>
+    <a class="sub" href="#s4-2">4.2 增强能力</a>
+    <a href="#s5">5 交付清单</a>
+    <a href="#s6">6 视频分镜</a>
+  </nav>
+
+  <article>
+    <section class="hero" id="s0">
+      <div class="kicker">2026 高德 AI 大赛 · 形式 B</div>
+      <h1>HappyDriver</h1>
+      <p>明早几点走，今晚就知道；路上有变，提前叫你。基于高德天气、交通态势与路径规划，预测未来 7 天的最佳出发时间与路线，把「上车才开地图」变成「出门前就收到结论」。</p>
+      <div class="meta">
+        <span>形态：单页 Web（移动 / 桌面自适应）</span>
+        <span>走廊：通州果园 → 国贸银泰中心</span>
+        <span>数据：<b>高德开放平台实时接口</b></span>
+        <span>Demo：<b>可时间旅行</b></span>
+      </div>
+    </section>
+
+    <section class="card" id="s1">
+      <h2><span class="num">1</span>选题背景：业务背景与选题原因</h2>
+
+      <h3 id="s1-1">1.1 业务背景：通勤是最高频、最规律、也最容易被做错的出行决策</h3>
+      <p>对大多数城市上班族来说，通勤不是一次性的「导航请求」，而是每周 5 次、每年 250 次左右的重复决策。真正困难的地方不在路上，而在<b>出门之前</b>：</p>
+      <div class="grid2">
+        <div class="mini"><b>① 时间不可逆</b><span>几点出门必须在看到路况之前决定。等上车打开地图，能做的只剩「换一条同样堵的路」。</span></div>
+        <div class="mini"><b>② 信息高度割裂</b><span>天气、路况、限行、地铁故障散落在不同 App，用户要在几个界面之间做心算。</span></div>
+        <div class="mini"><b>③ 解释严重缺失</b><span>「预计 58 分钟」里有多少是早高峰、多少是降雨、多少是事故？不知道，就不敢信。</span></div>
+        <div class="mini"><b>④ 服务默认被动</b><span>所有地图产品都假设「用户来查」，但通勤是高度规律的重复行为，完全可以主动送达。</span></div>
+      </div>
+      <p>以北京为例，一条 20 公里的跨区通勤走廊，平峰可能 35 分钟，早高峰叠加降雨或事故后可能接近 90 分钟。<b class="hl">同样的距离、同样的车，耗时差出 2 倍以上</b>；而用户唯一的应对方式，往往是「早点出门」或「赌一把」，两种策略都缺少依据。</p>
+
+      <h3 id="s1-2">1.2 现有产品的空白</h3>
+      <table>
+        <tr><th>现有能力</th><th>解决了什么</th><th>仍然缺什么</th></tr>
+        <tr><td><b>实时路况</b></td><td>告诉用户「现在堵不堵」</td><td>不回答「明早几点走」</td></tr>
+        <tr><td><b>路径规划 / ETA</b></td><td>告诉用户「这条路要多久」</td><td>不告诉用户「哪条路在明早更稳」</td></tr>
+        <tr><td><b>天气预报</b></td><td>告诉用户「明天有雨」</td><td>不告诉用户「雨会让你多花几分钟」</td></tr>
+        <tr><td><b>地铁 / 公交查询</b></td><td>给出替代方案</td><td>不会在暴雨时主动建议切换</td></tr>
+        <tr><td><b>推送 / 通知</b></td><td>可以发消息</td><td>缺少可解释、可执行的内容，容易变成打扰</td></tr>
+      </table>
+      <p>这些能力拼在一起，已经足够回答「明早怎么走」，但市场上缺少一个把它们<b>在正确的时间、以正确的粒度</b>组合起来的产品。</p>
+
+      <h3 id="s1-3">1.3 为什么是现在，为什么是高德</h3>
+      <div class="grid2">
+        <div class="mini"><b>数据基础成熟</b><span>天气、交通态势、路径规划 v5（TMC 路段级）、公交规划、JS API 2.0 已具备分钟级、路段级数据。</span></div>
+        <div class="mini"><b>决策可以前置</b><span>通勤走廊固定、时间规律，历史曲线 + 实时校准 + 天气预报足以做出比「拍脑袋」可靠的判断。</span></div>
+        <div class="mini"><b>可解释成为可能</b><span>把总耗时拆成四段，每段都能对应真实接口字段，用户才敢信。</span></div>
+        <div class="mini"><b>AI 能力可落地</b><span>高德 MCP / Skill / CLI（amap-gui）让 Agent 在夜间完成路线预演与数据汇总。</span></div>
+      </div>
+
+      <h3 id="s1-4">1.4 一个具体的早晨</h3>
+      <div class="quote">周一 07:30，用户打开地图。HappyDriver 已经算好：<br>「今天建议 <b>07:25</b> 出发，比平时早 35 分钟。京通快速四惠段有事故，昌平暴雨，预计 <b>08:53</b> 到，把握 <b>87%</b>。」<br>用户点「开始导航」，直接出发；不需要搜索终点，不需要在三个 App 之间来回切换。</div>
+      <p>这就是本作品要交付的体验：<b>把「看路况」升级为「收结论」，把「上车再查」提前到「出门之前」。</b></p>
+    </section>
+
+    <section class="card" id="s2">
+      <h2><span class="num">2</span>项目介绍：作品目标与架构说明</h2>
+
+      <h3 id="s2-1">2.1 作品目标</h3>
+      <table>
+        <tr><th>层级</th><th>目标</th><th>可验证指标</th></tr>
+        <tr><td><b>产品</b></td><td>出门前 12 小时拿到「出发时间 + 路线」的结论</td><td>首屏 1 屏内给出结论；3 次点击完成设置</td></tr>
+        <tr><td><b>体验</b></td><td>预测敢信、能解释、可推翻</td><td>每条建议附 3 条证据；给出置信度；支持「照旧走」对照</td></tr>
+        <tr><td><b>技术</b></td><td>真实调用高德能力，弱网 / 配额受限可降级</td><td>页面内可见 API 日志；断网时用本地快照完整演示</td></tr>
+      </table>
+
+      <h3 id="s2-2">2.2 用户旅程</h3>
+      <div class="flow">
+        <div class="step"><div class="t">今晚 21:00</div><div class="c"><b>夜间巡航</b><p>拉取未来天气 + 走廊实时路况 + 3 条备选路线，生成未来 7 天的「出发时间表」。</p></div></div>
+        <div class="step"><div class="t">明早 07:30</div><div class="c"><b>晨间播报</b><p>建议提前 ≥10 分钟 → 强提醒（站内卡片 + 系统通知），一句话说清原因。</p></div></div>
+        <div class="step"><div class="t">07:35</div><div class="c"><b>打开路线</b><p>主路线 + 2 条备选，红黄绿路段高亮，逐段解释；雨天自动推荐地铁。</p></div></div>
+        <div class="step"><div class="t">07:36</div><div class="c"><b>一键导航</b><p>通过高德 URI API 唤起导航，完成从「决策」到「出发」的闭环。</p></div></div>
+        <div class="step"><div class="t">途中</div><div class="c"><b>二次提醒</b><p>事故 / 暴雨导致耗时突变时，推送新结论并重排备选路线。</p></div></div>
+      </div>
+
+      <h3 id="s2-3">2.3 功能说明</h3>
+      <div class="grid2">
+        <div class="mini"><b>7 天出发时间预测</b><span>基于真实预报、走廊路况、历史曲线，逐天给出最晚可行出发时刻。</span></div>
+        <div class="mini"><b>可解释决策</b><span>耗时拆成自由流 / 早高峰 / 天气 / 突发；三条证据可展开原始返回。</span></div>
+        <div class="mini"><b>恶劣天气与突发</b><span>暴雨、事故、地铁故障注入后，时间、风险、备选路线实时重排。</span></div>
+        <div class="mini"><b>主动通知</b><span>站内锁屏式通知 + 系统通知；早上 6–10 点打开自动补一条。</span></div>
+        <div class="mini"><b>路线地图</b><span>JS API 2.0 底图、TMC 红黄绿、主/备路线、事故标记、路况图层。</span></div>
+        <div class="mini"><b>一键导航</b><span>高德 URI API，直接唤起导航。</span></div>
+        <div class="mini"><b>可演示性</b><span>时间旅行 + 情景注入，评委 30 秒看完完整闭环。</span></div>
+        <div class="mini"><b>降级可用</b><span>接口异常自动切换构建期快照，功能不缺失。</span></div>
+      </div>
+
+      <h3 id="s2-4">2.4 技术架构</h3>
+      <div class="arch">
+        <div class="layer"><b>浏览器 / 高德 App WebView</b><span>UI 卡片与时间轴 · 预测引擎（规则 + 权重融合）· JS API 2.0 地图与路线绘制</span></div>
+        <div class="arrow">↓ HTTPS / CORS</div>
+        <div class="layer"><b>高德开放平台</b><span>地理编码 · 天气（实况 + 预报）· 交通态势（圆 / 矩形 / 道路）· 驾车路径规划 v5（cost/tmcs/polyline）· 公交路径规划 v5 · 静态地图 · JS API 2.0 · URI API</span></div>
+        <div class="arrow">↓ 夜间巡航（可选）</div>
+        <div class="layer"><b>Agent 侧</b><span>amap-gui CLI / Skill：路线预演、POI 取点、地图状态回放；Node 脚本汇总快照，作为降级数据源</span></div>
+      </div>
+      <p><small>产品页不依赖后端：JS API 走脚本加载，REST 走浏览器 CORS，因此可零成本部署到 GitHub Pages，评委点开即用。后续接服务端时只替换数据层。</small></p>
+
+      <h3 id="s2-5">2.5 预测模型：可解释的轻量融合</h3>
+      <div class="formula">
+T_pred(d,t) = <em>T_free</em> × <em>scale</em> × <span>K_time</span>(weekday,t) × <span>K_weather</span>(d) × <span>liveAdj</span> + <span>ΔI</span>(d,t)
+      </div>
+      <table>
+        <tr><th>因子</th><th>含义</th><th>来源</th></tr>
+        <tr><td><b>T_free</b></td><td>自由流耗时</td><td>距离 ÷ 城市快速路自由流速度（45 km/h）</td></tr>
+        <tr><td><b>scale</b></td><td>实时校准</td><td>当前高德实测耗时 ÷（自由流 × 当前历史系数），把模型拉回真实路况</td></tr>
+        <tr><td><b>K_time</b></td><td>走廊早高峰曲线</td><td>星期 × 10 分钟系数表（0.95–2.95），可由真实历史行程回归替换</td></tr>
+        <tr><td><b>K_weather</b></td><td>天气影响</td><td>晴 1.00 / 小雨 1.12 / 中雨 1.22 / 大雨 1.35 / 暴雨 1.50 / 雪 1.45 / 雾 1.30</td></tr>
+        <tr><td><b>liveAdj</b></td><td>实时拥堵校准</td><td>交通态势的 congested + blocked 比例 → 0.94–1.06</td></tr>
+        <tr><td><b>ΔI</b></td><td>突发事件</td><td>事故 +12 分钟起、随时间消散；地铁故障 +18 分钟</td></tr>
+      </table>
+      <p><b>决策规则：</b>在候选时刻里，选择「到达 ≤ 期望到达」概率 ≥ 80% 的<b>最晚</b>出发时刻（让用户多睡）；若全部不满足，则给出「最早可行出发 + 预计迟到 X 分钟」的诚实结论。</p>
+      <div class="formula">
+Risk = 0.45 × 时间风险 + 0.30 × 天气风险 + 0.25 × 路况风险 &nbsp;&nbsp;→&nbsp;&nbsp; 0–100
+Confidence = 92%(D0) / 86%(D1) / 79%(D2) / 72%(D3) / 60%(D4) / 56%(D5) / 52%(D6)
+      </div>
+      <p><b>可解释：</b>把 <code>T_pred − T_free</code> 拆成「早高峰 / 天气 / 突发」三段，用堆叠条呈现；每条建议附「天气 / 路况 / 历史」三条证据，点开可看原始 API 字段。</p>
+      <p><small>边界：高德天气预报返回 4 天，第 5–7 天为趋势外推，界面标注「外推」，不伪装成实时预报；未来时刻的路况由「历史曲线 × 实时校准」估算，不宣称能预知事故。</small></p>
+
+      <h3 id="s2-6">2.6 数据流、降级与边界</h3>
+      <div class="stats">
+        <div class="stat"><b>7</b><span>每次刷新并行调用 7 个高德接口</span></div>
+        <div class="stat"><b>&lt;1.5s</b><span>首屏数据聚合耗时（实测）</span></div>
+        <div class="stat"><b>0</b><span>后端依赖，静态站点即可运行</span></div>
+      </div>
+      <p><b>启动：</b>并行请求两地天气、走廊 3 点交通态势、3 条驾车路线、1 条公交路线 → 预测引擎生成 7 天 × 候选时刻矩阵 → 地图与时间轴联动。</p>
+      <p><b>降级：</b>任一接口失败 → 使用 <code>assets/js/snapshot.js</code>（构建期由真实接口生成），顶部显示「快照 + 生成时间」，功能不缺失。</p>
+      <p><b>边界：</b>预测是估算，不构成出行承诺；事故、暴雨、地铁故障为演示注入并明确标注；家 / 公司地址仅保存在浏览器本地。</p>
+    </section>
+
+    <section class="card" id="s3">
+      <h2><span class="num">3</span>商业价值：解决谁的什么问题、价值在哪、如何使用、落地计划</h2>
+
+      <h3 id="s3-1">3.1 解决谁的什么问题</h3>
+      <table>
+        <tr><th>对象</th><th>具体问题</th><th>HappyDriver 给什么</th></tr>
+        <tr><td><b>通勤族（C 端）</b></td><td>每天在「几点走」上赌运气；雨天/事故必然迟到；多 App 心算</td><td>前一晚给出明天的出发时间与路线；07:30 主动提醒；一键导航</td></tr>
+        <tr><td><b>企业 / 园区（B 端）</b></td><td>恶劣天气大面积迟到；班车排班靠经验；错峰缺依据</td><td>走廊级通勤预测；错峰建议；恶劣天气预案；班车调度参考</td></tr>
+        <tr><td><b>高德平台</b></td><td>导航是「出发后」的单次工具流量，缺少「出发前」的高频入口</td><td>新的决策入口与服务分发位；走廊级通勤画像</td></tr>
+      </table>
+
+      <h3 id="s3-2">3.2 价值在哪</h3>
+      <div class="grid2">
+        <div class="mini"><b>少迟到</b><span>提前识别暴雨、事故，把「必然迟到」变成「早走 20 分钟」。</span></div>
+        <div class="mini"><b>少焦虑</b><span>结论 + 原因 + 把握一次给全，不用在三个 App 之间做心算。</span></div>
+        <div class="mini"><b>多睡</b><span>在能赶上的前提下选择最晚出发时刻，而不是盲目提前。</span></div>
+        <div class="mini"><b>可量化</b><span>按每年 250 次通勤、每次省 6 分钟估算，一年约省 25 小时。</span></div>
+      </div>
+      <p><b>平台价值：</b>提升 DAU / 留存与推送打开率；创造「出发前」的服务分发位（打车、地铁、充电、早餐自提）；沉淀走廊 × 时段 × 天气的出行画像，反哺路况预测与城市交通治理。</p>
+      <p><b>B 端价值：</b>把「明天大面积迟到」变成可提前干预的运营事件；企业通勤 SaaS 按园区订阅，提供错峰、班车、恶劣天气预案。</p>
+
+      <h3 id="s3-3">3.3 如何使用</h3>
+      <div class="flow">
+        <div class="step"><div class="t">第 1 步</div><div class="c"><b>打开页面</b><p>首屏直接看到下一次通勤的结论；授权通知可选。</p></div></div>
+        <div class="step"><div class="t">第 2 步</div><div class="c"><b>设置通勤</b><p>家、公司、平时出发、期望到达、停车/步行缓冲；地址经高德地理编码解析后自动重算。</p></div></div>
+        <div class="step"><div class="t">第 3 步</div><div class="c"><b>每天使用</b><p>晚上看「明早建议」，早上收到播报，点「开始导航」出发。</p></div></div>
+      </div>
+      <div class="pillrow">
+        <span class="pill b">周一早高峰：07:50 出发，避开事故</span>
+        <span class="pill v">暴雨预警：07:35 出发，地铁更稳</span>
+        <span class="pill r">突发事故：07:25 出发，备选重排</span>
+        <span class="pill g">周末：自动跳到下个工作日</span>
+      </div>
+
+      <h3 id="s3-4">3.4 落地计划</h3>
+      <table>
+        <tr><th>阶段</th><th>时间</th><th>目标</th><th>关键动作</th></tr>
+        <tr><td><b>参赛 Demo</b></td><td>1 个月</td><td>单城市单走廊跑通闭环</td><td>真实接口 + 可解释模型 + 在线演示 + 录屏</td></tr>
+        <tr><td><b>产品化</b></td><td>3 个月</td><td>进入高德 App 通勤卡片 / 小组件</td><td>历史行程学习 K_time；服务端巡航与推送；覆盖 10 条走廊</td></tr>
+        <tr><td><b>规模化</b></td><td>6–12 个月</td><td>多城市、多模式、B 端版本</td><td>驾车/公交/骑行组合；企业通勤 SaaS；天气、交管、地铁数据联动</td></tr>
+      </table>
+      <div class="pillrow">
+        <span class="pill b">北极星：周活跃通勤用户 × 建议采纳率</span>
+        <span class="pill">MAE</span>
+        <span class="pill">播报打开率</span>
+        <span class="pill">导航唤起率</span>
+        <span class="pill">提前出门建议准确率</span>
+      </div>
+
+      <h3>3.5 商业模式</h3>
+      <div class="grid2">
+        <div class="mini"><b>C 端免费</b><span>基础预测与播报免费，作为高德 App 的留存功能。</span></div>
+        <div class="mini"><b>C 端增值</b><span>多地址、家庭共享、企业日历同步、历史通勤报告（会员）。</span></div>
+        <div class="mini"><b>B 端订阅</b><span>园区 / 企业按人数或走廊订阅，提供错峰、班车、天气预案。</span></div>
+        <div class="mini"><b>平台分发</b><span>在「出发前」场景分发打车、地铁、充电、早餐，按效果计费。</span></div>
+      </div>
+
+      <h3>3.6 风险与合规</h3>
+      <ul class="check">
+        <li><b>隐私：</b>家 / 公司地址默认本地存储、不上传；服务端仅存脱敏走廊 ID。</li>
+        <li><b>预期管理：</b>预测带置信度，明确标注「外推」「估算」；不承诺 100% 准确，不宣称可预知事故。</li>
+        <li><b>合规：</b>地图与数据均来自高德开放平台，遵守服务条款；演示 Key 仅用于赛事，正式上线做域名白名单与配额管理。</li>
+      </ul>
+    </section>
+
+    <section class="card" id="s4">
+      <h2><span class="num">4</span>能力清单：使用的高德开放平台能力，逐项列明用途</h2>
+
+      <h3 id="s4-1">4.1 核心能力（页面运行时真实调用）</h3>
+      <table>
+        <tr><th>#</th><th>能力</th><th>接口 / 组件</th><th>用途</th><th>页面位置</th></tr>
+        <tr><td>1</td><td>地理编码</td><td><code>/v3/geocode/geo</code></td><td>家 / 公司地址转坐标；改地址后重算</td><td>设置面板</td></tr>
+        <tr><td>2</td><td>天气实况</td><td><code>/v3/weather/weatherInfo</code></td><td>当前天气、温度、风力</td><td>Hero / 简报</td></tr>
+        <tr><td>3</td><td>天气预报</td><td><code>?extensions=all</code></td><td>未来 4 天预报，驱动 K_weather</td><td>7 天时间轴</td></tr>
+        <tr><td>4</td><td>交通态势（圆）</td><td><code>/v3/traffic/status/circle</code></td><td>家 / 走廊 / 公司三点采样，计算 liveAdj</td><td>证据面板</td></tr>
+        <tr><td>5</td><td>驾车路径规划 v5</td><td><code>/v5/direction/driving</code></td><td>主路线 + 2 条备选，耗时与 TMC 红黄绿</td><td>地图 / 路线列表</td></tr>
+        <tr><td>6</td><td>公交路径规划 v5</td><td><code>/v5/direction/transit/integrated</code></td><td>雨天 / 拥堵时的地铁方案；故障标注</td><td>备选方案</td></tr>
+        <tr><td>7</td><td>静态地图</td><td><code>/v3/staticmap</code></td><td>分享卡片 / 通知缩略图（扩展位）</td><td>分享 / 快照</td></tr>
+        <tr><td>8</td><td>JS API 2.0</td><td><code>AMap.Map</code></td><td>底图与交互容器</td><td>地图卡片</td></tr>
+        <tr><td>9</td><td>实时路况图层</td><td><code>AMap.TileLayer.Traffic</code></td><td>红黄绿路况可视化（可切换）</td><td>地图卡片</td></tr>
+        <tr><td>10</td><td>覆盖物</td><td><code>Polyline</code> / <code>Marker</code></td><td>主 / 备路线、起终点、事故点</td><td>地图卡片</td></tr>
+        <tr><td>11</td><td>URI API</td><td><code>uri.amap.com/navigation</code></td><td>一键唤起高德导航</td><td>Hero「开始导航」</td></tr>
+      </table>
+
+      <h3 id="s4-2">4.2 增强能力（夜间巡航 / Agent 侧）</h3>
+      <table>
+        <tr><th>#</th><th>能力</th><th>接口 / 组件</th><th>用途</th></tr>
+        <tr><td>12</td><td>交通态势（矩形）</td><td><code>/v3/traffic/status/rectangle</code></td><td>沿走廊批量采样，识别拥堵路段（扩展位）</td></tr>
+        <tr><td>13</td><td>交通态势（道路）</td><td><code>/v3/traffic/status/road</code></td><td>指定道路的方向与拥堵程度（扩展位）</td></tr>
+        <tr><td>14</td><td>逆地理编码</td><td><code>/v3/geocode/regeo</code></td><td>地图点选后回填地址名（扩展位）</td></tr>
+        <tr><td>15</td><td>amap-gui CLI / Skill</td><td><code>route / mapState / searchPOI</code></td><td>Agent 夜间巡航：路线预演、地图回放、POI 取点</td></tr>
+        <tr><td>16</td><td>高德千屿平台（规划）</td><td>POI / 道路 / 客流 / 车流</td><td>后续接入走廊客流与车流，提升预测精度</td></tr>
+      </table>
+
+      <h3>4.3 能力与页面模块的对应关系</h3>
+      <table>
+        <tr><th>页面模块</th><th>主要能力</th></tr>
+        <tr><td>晨间播报卡</td><td>天气实况 / 预报、驾车路径规划、交通态势</td></tr>
+        <tr><td>未来 7 天</td><td>天气预报、历史曲线、天气系数</td></tr>
+        <tr><td>路线地图</td><td>JS API 2.0、路况图层、覆盖物、驾车路径规划</td></tr>
+        <tr><td>为什么是这个时间</td><td>交通态势、天气、路径规划耗时、历史系数</td></tr>
+        <tr><td>备选方案</td><td>驾车多备选、公交路径规划</td></tr>
+        <tr><td>开始导航</td><td>URI API</td></tr>
+        <tr><td>夜间巡航</td><td>amap-gui CLI、天气、交通态势、路径规划</td></tr>
+      </table>
+
+      <h3>4.4 合规说明</h3>
+      <ul class="check">
+        <li>所有地图与交通数据均来自高德开放平台，遵守其服务条款与配额限制。</li>
+        <li>演示 Key 仅用于赛事展示；正式上线前配置域名白名单、安全密钥与配额。</li>
+        <li>用户地址仅本地存储；预测结果标注置信度与免责声明。</li>
+      </ul>
+    </section>
+
+    <section class="card" id="s5">
+      <h2><span class="num">5</span>交付清单</h2>
+      <table>
+        <tr><th>赛事要求</th><th>本作品交付</th></tr>
+        <tr><td>方案文档（PDF/Word，800 字以上）</td><td>本文档（约 4000 字），按四节目录撰写；<code>01-作品方案-HappyDriver.pdf</code></td></tr>
+        <tr><td>在线地址</td><td>https://jiwangreal.github.io/commute-oracle/</td></tr>
+        <tr><td>GitHub 仓库</td><td>含 README（运行方式、在线地址、目录说明）</td></tr>
+        <tr><td>演示视频（≤5 分钟）</td><td><code>02-演示视频-HappyDriver.mp4</code>（Motion 动画制作）</td></tr>
+        <tr><td>合规性声明</td><td><code>03-合规性声明-HappyDriver.md</code>，按官方模板签字后上传</td></tr>
+        <tr><td>实际调用高德能力</td><td>页面内 API 日志实时展示；<code>data/fallback-snapshot.json</code> 保留原始返回</td></tr>
+      </table>
+    </section>
+
+    <section class="card" id="s6">
+      <h2><span class="num">6</span>附：演示视频分镜（约 2 分 30 秒）</h2>
+      <div class="flow">
+        <div class="step"><div class="t">00:00</div><div class="c"><b>开场</b><p>HappyDriver 标识 + 「明早几点走，今晚就知道」。</p></div></div>
+        <div class="step"><div class="t">00:10</div><div class="c"><b>问题</b><p>07:00 上车才看地图，路线变红，预计耗时不断上涨。</p></div></div>
+        <div class="step"><div class="t">00:30</div><div class="c"><b>解法</b><p>昨晚 21:00 已完成巡航，给出 07:35 出发、08:56 到达、把握 87%。</p></div></div>
+        <div class="step"><div class="t">00:50</div><div class="c"><b>7 天</b><p>逐天滑动，周三暴雨高风险，周五标注外推。</p></div></div>
+        <div class="step"><div class="t">01:10</div><div class="c"><b>暴雨 / 事故</b><p>注入后推荐时间 07:50 → 07:35 → 07:25，通知弹出。</p></div></div>
+        <div class="step"><div class="t">01:35</div><div class="c"><b>路线</b><p>地图主/备路线与 TMC 红黄绿，地铁方案「雨天更稳」。</p></div></div>
+        <div class="step"><div class="t">01:55</div><div class="c"><b>能力墙</b><p>天气、交通态势、路径规划 v5、JS API、URI、amap-gui。</p></div></div>
+        <div class="step"><div class="t">02:15</div><div class="c"><b>收尾</b><p>HappyDriver + 在线地址 + 二维码。</p></div></div>
+      </div>
+    </section>
+
+    <div class="footer">HappyDriver · 2026 高德 AI 大赛参赛作品 · 文档版本 v2.0 · 2026-11-27</div>
+  </article>
+</div>
+
+</body>
+</html>
