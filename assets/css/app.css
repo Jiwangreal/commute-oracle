@@ -360,6 +360,16 @@ svg{display:block}
 .sc-ico{grid-row:span 2;width:32px;height:32px;border-radius:10px;background:#eef3ff;display:grid;place-items:center;font-size:16px;align-self:center}
 .scenario b{font-size:12.5px;font-weight:650;align-self:end}
 .scenario i{font-style:normal;font-size:10.5px;color:var(--muted);align-self:start}
+.agent-strip{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:12px;padding:8px 11px;border-radius:10px;
+  background:#f7f9fe;border:1px dashed var(--line-strong);
+  font-size:10.5px;color:var(--muted);
+}
+.agent-strip b{color:var(--ink-2);font-weight:650;font-size:11px}
+.agent-strip code{font-family:var(--mono);font-size:10px;color:#3b5bb5;background:#eef3ff;border-radius:4px;padding:1px 5px}
+.agent-dot{width:6px;height:6px;border-radius:50%;background:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.14)}
+
 .console-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;flex-wrap:wrap}
 .notif-toggle{display:flex;align-items:center;gap:10px}
 .notif-toggle b{font-size:12px;font-weight:650;display:block}

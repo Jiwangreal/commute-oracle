@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-27T07:15:12.614Z",
+  "generatedAt": "2026-11-27T07:21:17.815Z",
   "corridor": {
     "from": "果园地铁站",
     "to": "北京银泰中心"
@@ -41,20 +41,20 @@
     }
   ],
   "traffic": {
-    "expedite": "55.07%",
-    "congested": "20.29%",
+    "expedite": "56.92%",
+    "congested": "16.92%",
     "blocked": "0.00%",
-    "unknown": "24.64%",
+    "unknown": "26.16%",
     "status": "2",
     "description": "轻度拥堵"
   },
   "driving": {
     "distance": 17954,
-    "minutes": 31,
+    "minutes": 30,
     "alternatives": [
       {
         "distance": 17954,
-        "minutes": 31
+        "minutes": 30
       },
       {
         "distance": 18485,
@@ -62,7 +62,7 @@
       },
       {
         "distance": 18604,
-        "minutes": 38
+        "minutes": 37
       }
     ]
   },
