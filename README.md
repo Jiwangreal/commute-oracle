@@ -5,7 +5,7 @@
 > 2026 高德 AI 大赛「形式 B：使用高德 AI 能力的应用」参赛作品
 
 [在线 Demo](https://jiwangreal.github.io/commute-oracle/) ·
-[作品方案文档](doc/plan.html) ·
+[作品方案文档](doc/plan.html) · [PDF](doc/plan.pdf) ·
 [演示脚本](doc/DEMO_SCRIPT.md) ·
 [合规声明](doc/COMPLIANCE.md)
 
@@ -119,6 +119,7 @@ node scripts/agent-morning.mjs
 ├── doc/
 │   ├── PLAN.md                 # 方案文档（Markdown）
 │   ├── plan.html               # 方案文档（可打印 Q 版）
+│   ├── plan.pdf                # 方案文档 PDF（9 页）
 │   ├── DEMO_SCRIPT.md          # 5 分钟录屏脚本
 │   ├── COMPLIANCE.md           # 合规性声明模板
 │   └── screenshots/            # 演示截图
