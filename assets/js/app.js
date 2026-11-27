@@ -1,4 +1,4 @@
-/* 通勤先知 — 交互与渲染 */
+/* HappyDriver — 交互与渲染 */
 (function (global) {
   'use strict';
 
@@ -9,7 +9,8 @@
   const $ = U.$;
   const $$ = U.$$;
 
-  const LS_KEY = 'commute-oracle-scenario';
+  const LS_KEY = 'happydriver-scenario';
+  const LS_KEY_OLD = 'commute-oracle-scenario';
 
   const state = {
     scenario: null,
@@ -61,7 +62,7 @@
 
   function loadScenario() {
     const base = clone(CFG.scenario);
-    const saved = U.storageGet(LS_KEY, null);
+    const saved = U.storageGet(LS_KEY, null) || U.storageGet(LS_KEY_OLD, null);
     if (!saved) return base;
     return {
       ...base,
@@ -627,7 +628,7 @@
       const s = state.scenario;
       const url = 'https://uri.amap.com/navigation?from=' + s.home.coord.join(',') + ',' + encodeURIComponent(s.home.name)
         + '&to=' + s.work.coord.join(',') + ',' + encodeURIComponent(s.work.name)
-        + '&mode=car&policy=1&src=commuteoracle&coordinate=gaode&callnative=1';
+        + '&mode=car&policy=1&src=happydriver&coordinate=gaode&callnative=1';
       window.open(url, '_blank', 'noopener');
       toast('已唤起高德导航（URI API）');
     });
@@ -778,7 +779,7 @@
     if (h < 6 || h > 10) return;
     const d = state.days[0];
     if (!d || d.past) return;
-    const key = 'commute-oracle-last-brief';
+    const key = 'happydriver-last-brief';
     if (U.storageGet(key, null) === U.dateKey(new Date())) return;
     U.storageSet(key, U.dateKey(new Date()));
     const early = d.deltaMin > 0 ? '比平时早 ' + d.deltaMin + ' 分钟' : '按平时时间走';
@@ -799,7 +800,7 @@
 
     if (state.notifOn && 'Notification' in window && Notification.permission === 'granted') {
       try {
-        const n = new Notification('通勤先知', { body: title + ' · ' + body, tag: 'commute-oracle', lang: 'zh-CN' });
+        const n = new Notification('HappyDriver', { body: title + ' · ' + body, tag: 'happydriver', lang: 'zh-CN' });
         n.onclick = () => { window.focus(); hideNotification(); };
       } catch (e) { /* ignore */ }
     }

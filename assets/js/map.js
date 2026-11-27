@@ -1,4 +1,4 @@
-/* 通勤先知 — 高德 JS API 2.0 地图封装 */
+/* HappyDriver — 高德 JS API 2.0 地图封装 */
 (function (global) {
   'use strict';
 

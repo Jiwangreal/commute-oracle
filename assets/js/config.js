@@ -1,4 +1,4 @@
-/* 通勤先知 — 全局配置（前端公开配置，仅用于赛事演示） */
+/* HappyDriver — 全局配置（前端公开配置，仅用于赛事演示） */
 window.APP_CONFIG = {
   amapKey: '8a419b3cb914d55c5cee180d5eb7c379',
 

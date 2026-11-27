@@ -1,4 +1,4 @@
-/* 通勤先知 — 可解释的轻量预测模型
+/* HappyDriver — 可解释的轻量预测模型
  *
  * T_pred(d,t) = T_free × scale × K_time(weekday,t) × K_weather(d) × liveAdj + ΔI(d,t)
  * 目标是给出「几点走 + 为什么 + 多大把握」，而不是假装能预知事故。
