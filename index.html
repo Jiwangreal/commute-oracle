@@ -281,6 +281,20 @@
         <label class="field"><span>期望到达</span><input id="inArrive" type="time" step="300"></label>
       </div>
       <label class="field">
+        <span>明天是（演示基准日）</span>
+        <select id="inWeekday">
+          <option value="">自动 · 按真实日期</option>
+          <option value="1">周一</option>
+          <option value="2">周二</option>
+          <option value="3">周三</option>
+          <option value="4">周四</option>
+          <option value="5">周五</option>
+          <option value="6">周六</option>
+          <option value="0">周日</option>
+        </select>
+        <small>选一天，7 天预测就从那天的星期开始算；周末系数自动切换</small>
+      </label>
+      <label class="field">
         <span>停车 / 步行缓冲（分钟）</span>
         <input id="inBuffer" type="number" min="0" max="30" step="1">
       </label>

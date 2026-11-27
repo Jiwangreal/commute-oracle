@@ -102,9 +102,15 @@
     const scale = clamp(0.55 * liveRatio + 0.45, 0.88, 1.24);
     const trafficAdj = clamp(1 + ((o.traffic ? o.traffic.ratio : 0.15) - 0.15) * 0.22, 0.94, 1.06);
 
+    // 演示基准日：把「明天」指定成某个星期；指定后 7 天从「明天」开始排，不再包含今天
+    const sw = scenario.startWeekday;
+    const sim = !(sw === null || sw === undefined || sw === '' || !isFinite(Number(sw)));
+    const shift = sim ? ((Number(sw) - (now.getDay() + 1)) % 7 + 7) % 7 : 0;
+    const baseOffset = sim ? 1 + shift : 0;
+
     const days = [];
     for (let offset = 0; offset < 7; offset++) {
-      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + baseOffset + offset);
       const key = dateKey(date);
       const wx = (o.weatherByKey && o.weatherByKey[key]) || {
         day: '晴', night: '晴', high: 20, low: 10, wind: '—', power: '1-3', source: 'extrapolated'
@@ -140,11 +146,14 @@
       const weatherPart = free * chosen.idx * (wf - 1);
       const incidentPart = chosen.incident;
 
-      const past = offset === 0 && nowMin > usual + 30;
+      const past = !sim && offset === 0 && nowMin > usual + 30;
 
       days.push({
         offset,
         date,
+        isToday: !sim && offset === 0,
+        isTomorrow: sim ? offset === 0 : offset === 1,
+        simulated: sim,
         key,
         isWeekend: date.getDay() === 0 || date.getDay() === 6,
         weekday: weekdayCN(date.getDay()),

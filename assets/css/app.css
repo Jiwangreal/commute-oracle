@@ -503,6 +503,9 @@ svg{display:block}
 }
 @media (max-width:760px){
   .top-route{display:none}
+  .brand-text i{display:none}
+  .brand-text b{font-size:15.5px}
+  .topbar{gap:12px}
   .wrap{padding:14px 12px 34px;gap:14px}
   .hero{grid-template-columns:1fr;padding:24px 20px 22px;border-radius:26px}
   .hero-side{flex-direction:row;justify-content:space-between;align-items:center;margin-top:4px}
@@ -526,6 +529,7 @@ svg{display:block}
 @media (max-width:420px){
   .hero-actions .btn{flex:1 1 auto}
   .hero-time #heroDepart{font-size:58px}
+  .live-pill{padding:6px 9px;font-size:10.5px;gap:5px}
 }
 
 @media (prefers-reduced-motion:reduce){

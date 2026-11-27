@@ -146,25 +146,31 @@
       const n = parseFloat(String(v == null ? '0' : v));
       return isFinite(n) ? n : 0;
     };
-    const points = raws.map((r, i) => {
-      const info = (r && r.trafficinfo) || {};
-      const ev = info.evaluation || {};
-      const congested = pct(ev.congested);
-      const blocked = pct(ev.blocked);
+    const points = (raws || []).map((r, i) => {
+      const info = (r && r.trafficinfo) || null;
+      const ev = (info && info.evaluation) || null;
+      const ok = !!ev;
+      const congested = pct(ev && ev.congested);
+      const blocked = pct(ev && ev.blocked);
       return {
         name: ['家', '走廊', '公司'][i] || ('点' + i),
-        ratio: U.clamp((congested + blocked) / 100, 0, 1),
-        status: ev.status || '0',
-        statusText: ev.description || '未知',
-        description: info.description || ''
+        ok,
+        ratio: ok ? U.clamp((congested + blocked) / 100, 0, 1) : null,
+        status: ok ? (ev.status || '0') : '0',
+        statusText: ok ? (ev.description || '未知') : '暂不可用',
+        description: (info && info.description) || ''
       };
     });
-    const ratio = points.reduce((s, p) => s + p.ratio, 0) / Math.max(1, points.length);
+    const known = points.filter((p) => p.ratio != null);
+    const ratio = known.length
+      ? known.reduce((s, p) => s + p.ratio, 0) / known.length
+      : 0.15; // 全部拿不到时退回中性估计，不虚构具体拥堵比例
     const worst = points.slice().sort((a, b) => Number(b.status) - Number(a.status))[0] || points[0];
     const descs = Array.from(new Set(points.map((p) => p.description).filter(Boolean)));
     return {
       points,
       ratio,
+      available: known.length > 0,
       statusText: worst ? worst.statusText : '未知',
       description: descs.join('；')
     };
@@ -289,7 +295,8 @@
       { name: '走廊', coord: mid, radius: 3000 },
       { name: '公司', coord: scenario.work.coord, radius: 2000 }
     ];
-    const trafficRaw = await Promise.all(corridor.map(fetchTraffic));
+    // 路况接口每天有配额，单点失败不该拖垮整次预测：失败点按「未知」处理
+    const trafficRaw = await Promise.all(corridor.map((p) => fetchTraffic(p).catch(() => null)));
     const traffic = trafficFactor(trafficRaw);
 
     const drivingRaw = await request(api.driving, {

@@ -78,7 +78,8 @@
       work: state.scenario.work,
       usualDepart: state.scenario.usualDepart,
       targetArrive: state.scenario.targetArrive,
-      bufferMin: state.scenario.bufferMin
+      bufferMin: state.scenario.bufferMin,
+      startWeekday: state.scenario.startWeekday
     });
   }
 
@@ -163,6 +164,11 @@
   }
 
   function pickDefault(days) {
+    // 显式设了基准日，就按用户选的那天展示，不再自动跳周末
+    if (days[0] && days[0].simulated) {
+      const t = days.findIndex((d) => d.isTomorrow && !d.past);
+      if (t !== -1) return t;
+    }
     // 通勤产品优先看下一个工作日；周末默认跳过
     const workday = days.findIndex((d) => !d.past && !d.isWeekend);
     if (workday !== -1) return workday;
@@ -231,8 +237,8 @@
 
   function heroTag(d) {
     let label = '';
-    if (d.offset === 0) label = '今天';
-    else if (d.offset === 1) label = d.isWeekend ? d.weekday : '明早';
+    if (d.isToday) label = '今天';
+    else if (d.isTomorrow) label = d.isWeekend ? '' : '明早';
     else if (d.offset === 2) label = '后天';
     return (label ? label + ' · ' : '') + d.weekday + ' · ' + U.monthDay(d.date);
   }
@@ -286,14 +292,16 @@
       chips.push('<span class="pill risk-high">🚇 地铁故障</span>');
     }
     if (d.offset >= 4) chips.push('<span class="pill">🌱 长期趋势 · 把握较低</span>');
-    if (state.days[1] && state.days[1].isWeekend && state.selected !== 1) {
+    if (d.simulated) {
+      chips.push('<span class="pill">📅 已把明天设为' + state.days[0].weekday + '</span>');
+    } else if (state.days[1] && state.days[1].isWeekend && state.selected !== 1) {
       chips.push('<span class="pill">🗓 明天周末，已跳到工作日</span>');
     }
     $('#heroChips').innerHTML = chips.join('');
 
     const simBtn = $('#btnSimMorning');
     if (simBtn) {
-      const label = d.offset === 1 ? '模拟明早 07:30' : '模拟当天 07:30';
+      const label = d.isTomorrow ? '模拟明早 07:30' : '模拟当天 07:30';
       simBtn.innerHTML = '<span class="pulse-dot"></span>' + label;
     }
 
@@ -319,7 +327,7 @@
       if (injected) metaBits.push('注入');
       metaBits.push(Math.round(d.durationMin) + ' 分钟');
       return '<button class="day' + (active ? ' is-active' : '') + (past ? ' is-past' : '') + '" data-day="' + i + '" role="tab" aria-selected="' + active + '" title="' + U.escapeHtml(d.weekday + ' ' + U.monthDay(d.date) + ' · ' + d.weather.day) + '">'
-        + '<span class="day-top"><span class="day-name">' + (d.offset === 0 ? '今天' : (d.offset === 1 ? (d.isWeekend ? d.weekday : '明早') : (d.offset === 2 ? '后天' : d.weekday))) + '</span>'
+        + '<span class="day-top"><span class="day-name">' + (d.isToday ? '今天' : (d.isTomorrow ? (d.isWeekend ? d.weekday : '明早') : (d.offset === 2 ? '后天' : d.weekday))) + '</span>'
         + '<span class="day-date">' + U.monthDay(d.date) + '</span></span>'
         + '<span class="day-ico">' + d.weatherEmoji + '</span>'
         + '<span class="day-time">' + (past ? '已过' : d.depart) + '</span>'
@@ -329,8 +337,9 @@
     }).join('');
 
     const srcNote = state.source === 'snapshot' ? '快照数据' : '实时数据';
-    const skipped = state.days[1] && state.days[1].isWeekend && state.selected !== 1;
+    const skipped = !state.days[0].simulated && state.days[1] && state.days[1].isWeekend && state.selected !== 1;
     $('#weekSub').textContent = '基于高德天气 + 走廊交通态势 + 历史曲线（' + srcNote + '）· '
+      + (state.days[0].simulated ? '已把明天设为' + state.days[0].weekday + '，往后排 7 天 · ' : '')
       + (skipped ? '明天周末，已跳到下个工作日 · ' : '') + '点一天看细节';
   }
 
@@ -486,8 +495,13 @@
       wxLine(d)));
 
     const tr = state.data ? state.data.traffic : null;
-    ev.push(evidence('🚦', '路况', '高德交通态势',
-      tr ? ('走廊实时' + tr.statusText + '，拥堵占比 ' + (tr.ratio * 100).toFixed(1) + '%。' + truncate(tr.description, 46)) : '暂无实时路况'));
+    if (tr && tr.available) {
+      ev.push(evidence('🚦', '路况', '高德交通态势',
+        '走廊实时' + tr.statusText + '，拥堵占比 ' + (tr.ratio * 100).toFixed(1) + '%。' + truncate(tr.description, 46)));
+    } else {
+      ev.push(evidence('🚦', '路况', '接口暂不可用',
+        '交通态势接口今日配额已用尽，这段时间按历史早高峰曲线估计，不虚构实时拥堵数字。'));
+    }
 
     ev.push(evidence('📈', '历史', '走廊曲线',
       d.weekday + '早高峰系数 ' + d.factors.idx.toFixed(2) + '；平时 ' + U.fromMin(U.toMin(state.scenario.usualDepart)) + ' 出发预计 ' +
@@ -840,6 +854,7 @@
     $('#inDepart').value = s.usualDepart;
     $('#inArrive').value = s.targetArrive;
     $('#inBuffer').value = s.bufferMin;
+    $('#inWeekday').value = (s.startWeekday === null || s.startWeekday === undefined) ? '' : String(s.startWeekday);
   }
 
   async function saveSettings() {
@@ -848,6 +863,7 @@
     const depart = $('#inDepart').value;
     const arrive = $('#inArrive').value;
     const buffer = Number($('#inBuffer').value);
+    const wdRaw = $('#inWeekday') ? $('#inWeekday').value : '';
     const msg = $('#formMsg');
 
     if (!home || !work) { msg.textContent = '家和公司都要填一下'; return; }
@@ -859,12 +875,14 @@
     btn.disabled = true;
     btn.textContent = '解析地址…';
     try {
-      const [h, w] = await Promise.all([Data.geocode(home, APP_CONFIG.scenario.city), Data.geocode(work, APP_CONFIG.scenario.city)]);
+      // 不锁城市：全国地理编码，用户换城市也能用；重名时高德按完整地址消歧
+      const [h, w] = await Promise.all([Data.geocode(home, ''), Data.geocode(work, '')]);
       state.scenario.home = { ...state.scenario.home, name: h.name, short: shortName(home), address: home, coord: h.coord, adcode: h.adcode };
       state.scenario.work = { ...state.scenario.work, name: w.name, short: shortName(work), address: work, coord: w.coord, adcode: w.adcode };
       state.scenario.usualDepart = depart;
       state.scenario.targetArrive = arrive;
       state.scenario.bufferMin = buffer;
+      state.scenario.startWeekday = wdRaw === '' ? null : Number(wdRaw);
       saveScenario();
       closeSettings();
       renderSkeleton();
@@ -879,7 +897,11 @@
   }
 
   function shortName(s) {
-    const v = String(s || '').replace(/^北京市?/, '').trim();
+    const v = String(s || '')
+      .replace(/^[^省市]{2,8}省/, '')
+      .replace(/^[^市]{2,10}市/, '')
+      .replace(/^[^区县]{2,10}[区县]/, '')
+      .trim();
     const m = v.match(/([^号区县市]{2,8}(?:中心|大厦|广场|地铁站|车站|小区|家园|公寓|公园|园区))$/);
     if (m) return m[1].replace(/(地铁站|车站)$/, '');
     return v.replace(/(地铁站|车站)$/, '').slice(0, 8);

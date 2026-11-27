@@ -48,9 +48,14 @@ const corridor = [
 ];
 const traffic = [];
 for (const p of corridor) {
-  traffic.push(await get(CFG.api.trafficCircle, {
-    location: p.coord.join(','), radius: p.radius, extensions: 'base', level: 6
-  }, '路况·' + p.name));
+  try {
+    traffic.push(await get(CFG.api.trafficCircle, {
+      location: p.coord.join(','), radius: p.radius, extensions: 'base', level: 6
+    }, '路况·' + p.name));
+  } catch (e) {
+    console.warn(`  ! 路况·${p.name} 跳过：${e.message}`);
+    traffic.push(null);
+  }
 }
 
 const driving = await get(CFG.api.driving, {

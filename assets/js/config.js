@@ -24,6 +24,8 @@ window.APP_CONFIG = {
     targetArrive: '09:00',
     bufferMin: 6,
     citycode: '025',
+    /* 演示用基准日：null = 按真实日期；0–6 = 把「明天」指定为周日…周六 */
+    startWeekday: null,
     mode: 'driving'
   },
 
