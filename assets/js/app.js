@@ -239,7 +239,7 @@
     let label = '';
     if (d.isToday) label = '今天';
     else if (d.isTomorrow) label = d.isWeekend ? '' : '明早';
-    else if (d.offset === 2) label = '后天';
+    else if (d.offset === (d.simulated ? 1 : 2)) label = '后天';
     return (label ? label + ' · ' : '') + d.weekday + ' · ' + U.monthDay(d.date);
   }
 
@@ -327,7 +327,7 @@
       if (injected) metaBits.push('注入');
       metaBits.push(Math.round(d.durationMin) + ' 分钟');
       return '<button class="day' + (active ? ' is-active' : '') + (past ? ' is-past' : '') + '" data-day="' + i + '" role="tab" aria-selected="' + active + '" title="' + U.escapeHtml(d.weekday + ' ' + U.monthDay(d.date) + ' · ' + d.weather.day) + '">'
-        + '<span class="day-top"><span class="day-name">' + (d.isToday ? '今天' : (d.isTomorrow ? (d.isWeekend ? d.weekday : '明早') : (d.offset === 2 ? '后天' : d.weekday))) + '</span>'
+        + '<span class="day-top"><span class="day-name">' + (d.isToday ? '今天' : (d.isTomorrow ? (d.isWeekend ? d.weekday : '明早') : (d.offset === (d.simulated ? 1 : 2) ? '后天' : d.weekday))) + '</span>'
         + '<span class="day-date">' + U.monthDay(d.date) + '</span></span>'
         + '<span class="day-ico">' + d.weatherEmoji + '</span>'
         + '<span class="day-time">' + (past ? '已过' : d.depart) + '</span>'
@@ -877,8 +877,12 @@
     try {
       // 不锁城市：全国地理编码，用户换城市也能用；重名时高德按完整地址消歧
       const [h, w] = await Promise.all([Data.geocode(home, ''), Data.geocode(work, '')]);
-      state.scenario.home = { ...state.scenario.home, name: h.name, short: shortName(home), address: home, coord: h.coord, adcode: h.adcode };
-      state.scenario.work = { ...state.scenario.work, name: w.name, short: shortName(work), address: work, coord: w.coord, adcode: w.adcode };
+      // 名称沿用用户自己的叫法（"中科曙光"），规范地址留给 geocode 复查
+      // 没动地址输入框就沿用原有短名，避免「中科曙光」被 geocode 全称覆盖
+      const hShort = home === state.scenario.home.address ? state.scenario.home.short : shortName(home);
+      const wShort = work === state.scenario.work.address ? state.scenario.work.short : shortName(work);
+      state.scenario.home = { ...state.scenario.home, name: hShort, short: hShort, address: h.name || home, coord: h.coord, adcode: h.adcode };
+      state.scenario.work = { ...state.scenario.work, name: wShort, short: wShort, address: w.name || work, coord: w.coord, adcode: w.adcode };
       state.scenario.usualDepart = depart;
       state.scenario.targetArrive = arrive;
       state.scenario.bufferMin = buffer;
