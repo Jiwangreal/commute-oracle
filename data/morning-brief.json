@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-11-27T07:15:12.614Z",
+  "corridor": {
+    "from": "果园地铁站",
+    "to": "北京银泰中心"
+  },
+  "gui": {
+    "used": false,
+    "route": null,
+    "mapState": null
+  },
+  "weather": {
+    "weather": "晴",
+    "temperature": "10",
+    "wind": "北6"
+  },
+  "forecast": [
+    {
+      "date": "2026-11-27",
+      "day": "晴",
+      "high": "10",
+      "low": "0"
+    },
+    {
+      "date": "2026-11-28",
+      "day": "多云",
+      "high": "10",
+      "low": "-2"
+    },
+    {
+      "date": "2026-11-29",
+      "day": "晴",
+      "high": "8",
+      "low": "-1"
+    },
+    {
+      "date": "2026-11-30",
+      "day": "晴",
+      "high": "13",
+      "low": "-1"
+    }
+  ],
+  "traffic": {
+    "expedite": "55.07%",
+    "congested": "20.29%",
+    "blocked": "0.00%",
+    "unknown": "24.64%",
+    "status": "2",
+    "description": "轻度拥堵"
+  },
+  "driving": {
+    "distance": 17954,
+    "minutes": 31,
+    "alternatives": [
+      {
+        "distance": 17954,
+        "minutes": 31
+      },
+      {
+        "distance": 18485,
+        "minutes": 32
+      },
+      {
+        "distance": 18604,
+        "minutes": 38
+      }
+    ]
+  },
+  "transit": {
+    "minutes": 37,
+    "fee": "5.0",
+    "line": "地铁1号线八通线(环球度假区--苹果园)"
+  }
+}

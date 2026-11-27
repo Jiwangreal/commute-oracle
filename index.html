@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101a3a">
+<title>通勤先知 · 明早几点走，今晚就知道</title>
+<meta name="description" content="通勤先知：基于高德天气、交通态势与路径规划，预测未来 7 天的最佳出发时间与路线，恶劣天气与突发路况提前提醒。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%236aa8ff'/%3E%3Cstop offset='1' stop-color='%232f6bff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Cpath d='M16 40c8-2 10-16 20-14 7 1 7 9 12 8' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='40' r='4' fill='%23fff'/%3E%3Ccircle cx='48' cy='34' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+
+<header class="topbar">
+  <a class="brand" href="./" aria-label="通勤先知首页">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs><path d="M10 26c5-1 6-10 12-9 5 1 4 6 8 5" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="10" cy="26" r="2.6" fill="#fff"/><circle cx="30" cy="22" r="2.6" fill="#fff"/></svg>
+    </span>
+    <span class="brand-text"><b>通勤先知</b><i>CommuteOracle</i></span>
+  </a>
+
+  <div class="top-route" id="topRoute" title="当前通勤走廊">
+    <span class="dot from"></span><span id="topHome">果园</span>
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 7l5 5-5 5"/></svg>
+    <span class="dot to"></span><span id="topWork">银泰中心</span>
+  </div>
+
+  <div class="top-right">
+    <span class="live-pill" id="livePill" title="数据状态"><i></i><b>LIVE</b><em id="liveTime">--:--</em></span>
+    <button class="icon-btn" id="btnSettings" title="通勤设置" aria-label="通勤设置">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 8.9 4.6a1.7 1.7 0 0 0 1-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 8.9a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Hero：结论先行 -->
+  <section class="hero" id="hero" aria-live="polite">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-lines" aria-hidden="true">
+      <svg viewBox="0 0 800 260" preserveAspectRatio="none"><path d="M-20 210 C 120 190, 180 90, 300 110 S 470 210, 610 150 S 760 60, 830 80" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="2" stroke-dasharray="6 10"/><path d="M-20 230 C 130 215, 210 130, 330 150 S 500 240, 640 180 S 780 100, 840 115" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/></svg>
+    </div>
+
+    <div class="hero-main">
+      <div class="hero-eyebrow">
+        <span class="tag" id="heroTag">明早 · 周六</span>
+        <span class="sep"></span>
+        <span class="hero-weather" id="heroWeather">☀️ 晴 11° / 1°</span>
+        <span class="src-badge" id="heroSrc">7 天预测</span>
+      </div>
+
+      <div class="hero-time">
+        <span id="heroDepart">08:05</span>
+        <span class="hero-unit">出发</span>
+      </div>
+
+      <p class="hero-line" id="heroLine">比平时早 25 分钟，预计 09:26 到达公司</p>
+
+      <div class="hero-chips" id="heroChips"></div>
+
+      <div class="hero-actions">
+        <button class="btn primary" id="btnNav">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2.5-7.5L3 11z"/></svg>
+          开始导航
+        </button>
+        <button class="btn ghost" id="btnAlt">换条路</button>
+        <button class="btn soft" id="btnSimMorning">
+          <span class="pulse-dot"></span>模拟明早 07:30
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="mascot" id="mascot" aria-hidden="true">
+        <svg viewBox="0 0 140 150" fill="none">
+          <defs>
+            <linearGradient id="body" x1="30" y1="30" x2="110" y2="130"><stop stop-color="#eaf2ff"/><stop offset="1" stop-color="#bcd5ff"/></linearGradient>
+            <linearGradient id="cap" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6aa8ff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient>
+          </defs>
+          <ellipse cx="70" cy="140" rx="38" ry="6" fill="rgba(0,0,0,.18)"/>
+          <path d="M70 18v14" stroke="#cfe0ff" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="70" cy="14" r="5" fill="#ffd36a"><animate attributeName="opacity" values="1;.5;1" dur="2.4s" repeatCount="indefinite"/></circle>
+          <path d="M24 92c0-28 20-50 46-50s46 22 46 50v14c0 12-10 20-24 20H48c-14 0-24-8-24-20V92z" fill="url(#body)"/>
+          <path d="M35 96c0-22 15-39 35-39s35 17 35 39" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>
+          <ellipse cx="55" cy="94" rx="5.5" ry="7" fill="#22355f"/>
+          <ellipse cx="85" cy="94" rx="5.5" ry="7" fill="#22355f"/>
+          <circle cx="57" cy="91" r="2" fill="#fff"/><circle cx="87" cy="91" r="2" fill="#fff"/>
+          <ellipse cx="44" cy="108" rx="7" ry="4" fill="#ffb3c1" opacity=".8"/>
+          <ellipse cx="96" cy="108" rx="7" ry="4" fill="#ffb3c1" opacity=".8"/>
+          <path d="M64 108c3 4 9 4 12 0" stroke="#22355f" stroke-width="2.6" stroke-linecap="round"/>
+          <g transform="translate(18,58) rotate(-14)">
+            <circle cx="12" cy="12" r="13" fill="#fff" opacity=".95"/>
+            <path d="M8 16c3-1 3.5-6 7-5.5 3 .4 2.4 3.4 4.6 2.8" stroke="#2f6bff" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <circle cx="8" cy="16" r="1.8" fill="#2f6bff"/><circle cx="19.6" cy="13.3" r="1.8" fill="#2f6bff"/>
+          </g>
+        </svg>
+      </div>
+      <div class="confidence" id="confidence">
+        <div class="conf-ring" id="confRing" style="--p:86"><span id="confVal">86<em>%</em></span></div>
+        <div class="conf-label">把握</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 天时间轴 -->
+  <section class="week card" aria-label="未来 7 天预测">
+    <div class="week-head">
+      <div>
+        <h2>未来 7 天，几点走最稳</h2>
+        <p id="weekSub">基于真实天气预报 + 实时路况校准 · 点一天看细节</p>
+      </div>
+      <div class="week-legend">
+        <span><i class="lg low"></i>低风险</span>
+        <span><i class="lg mid"></i>中</span>
+        <span><i class="lg high"></i>高</span>
+      </div>
+    </div>
+    <div class="week-strip" id="weekStrip" role="tablist"></div>
+  </section>
+
+  <div class="grid">
+    <!-- 地图 -->
+    <section class="card map-card">
+      <div class="card-head">
+        <div>
+          <h2>路线与实时路况</h2>
+          <p id="mapSub">主路线已按预测耗时排序 · 路线颜色来自高德实时路况</p>
+        </div>
+        <div class="map-tools">
+          <button class="chip-btn" id="btnTraffic" aria-pressed="false">路况图层</button>
+          <button class="icon-btn small" id="btnRefresh" title="刷新实时数据" aria-label="刷新实时数据">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 5v6h-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="map-shell">
+        <div id="map" class="map"></div>
+        <div class="map-overlay">
+          <div class="map-legend">
+            <span><i style="background:#2ecc71"></i>畅通</span>
+            <span><i style="background:#f5b942"></i>缓行</span>
+            <span><i style="background:#ff5a5f"></i>拥堵</span>
+            <span><i style="background:#b23a48"></i>严重</span>
+          </div>
+          <div class="map-card-float" id="mapFloat">
+            <b>主线 · 最快</b>
+            <span>--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="routes" id="routes"></div>
+    </section>
+
+    <!-- 右侧：为什么 + 备选 -->
+    <aside class="side">
+      <section class="card why">
+        <div class="card-head tight">
+          <h2>为什么是这个时间</h2>
+          <span class="hint" id="whyHint">耗时拆解</span>
+        </div>
+        <div class="stack" id="stack" aria-hidden="true"></div>
+        <div class="stack-legend" id="stackLegend"></div>
+        <p class="why-line" id="whyLine"></p>
+        <div class="evidence" id="evidence"></div>
+      </section>
+
+      <section class="card alt-card">
+        <div class="card-head tight">
+          <h2>备选方案</h2>
+          <span class="hint">雨天更稳</span>
+        </div>
+        <div id="altList" class="alt-list"></div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- 演示控制台 -->
+  <section class="card console" id="console">
+    <div class="card-head">
+      <div>
+        <h2>演示控制台 <span class="beta">DEMO</span></h2>
+        <p>不用等一天，30 秒看完「预测 → 通知 → 重新规划」的闭环</p>
+      </div>
+      <button class="chip-btn" id="btnReset">重置演示</button>
+    </div>
+
+    <div class="scenario-grid">
+      <button class="scenario" data-scenario="rain">
+        <span class="sc-ico">☔</span>
+        <b>明早暴雨</b>
+        <i>降雨 + 路滑，建议提前</i>
+      </button>
+      <button class="scenario" data-scenario="crash">
+        <span class="sc-ico">🚧</span>
+        <b>京通快速事故</b>
+        <i>四惠段拥堵 +12 分钟</i>
+      </button>
+      <button class="scenario" data-scenario="metro">
+        <span class="sc-ico">🚇</span>
+        <b>地铁故障</b>
+        <i>备选方案失效，只剩驾车</i>
+      </button>
+      <button class="scenario" data-scenario="clear">
+        <span class="sc-ico">🌤️</span>
+        <b>天气转晴</b>
+        <i>撤销天气影响，看基线</i>
+      </button>
+    </div>
+
+    <div class="console-foot">
+      <div class="notif-toggle">
+        <label class="switch">
+          <input type="checkbox" id="notifSwitch">
+          <span class="slider"></span>
+        </label>
+        <div>
+          <b>系统通知</b>
+          <p>开启后，模拟播报会真的弹一条系统通知（需浏览器授权）</p>
+        </div>
+      </div>
+      <span class="demo-note" id="demoNote">当前：真实数据 · 未注入事件</span>
+    </div>
+
+    <details class="api-log" id="apiLog">
+      <summary>
+        <span class="log-dot"></span>高德 API 调用日志
+        <em id="apiCount">0 次</em>
+        <span class="log-tip">点开看真实返回</span>
+      </summary>
+      <div class="log-list" id="logList"></div>
+    </details>
+  </section>
+
+  <footer class="foot">
+    <p>通勤先知 · 2026 高德 AI 大赛参赛作品 · 数据来源：高德开放平台（天气 / 交通态势 / 路径规划 / JS API 2.0）</p>
+    <p class="foot-dim">预测为估算值，暴雨与事故为演示注入；第 5–7 天为趋势外推。请以实际路况为准。</p>
+  </footer>
+</main>
+
+<!-- 手机锁屏式通知 -->
+<div class="notif-wrap" id="notifWrap" aria-live="assertive">
+  <button class="notif" id="notif">
+    <div class="notif-head"><span class="notif-app"><i></i>通勤先知</span><span id="notifTime">现在</span></div>
+    <b id="notifTitle">明早建议 07:35 出发</b>
+    <p id="notifBody">暴雨 + 京通快速事故，比平时早 35 分钟。</p>
+    <span class="notif-cta">点开看路线 →</span>
+  </button>
+</div>
+
+<!-- 设置弹层 -->
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+  <div class="modal-mask" data-close></div>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="settingsTitle">我的通勤</h3>
+      <button class="icon-btn small" data-close aria-label="关闭">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="form">
+      <label class="field">
+        <span>家 / 起点</span>
+        <input id="inHome" type="text" autocomplete="off" placeholder="小区、地铁站或地址">
+        <small>支持地址或地铁站名，保存时用高德地理编码解析</small>
+      </label>
+      <label class="field">
+        <span>公司 / 终点</span>
+        <input id="inWork" type="text" autocomplete="off" placeholder="写字楼或地址">
+      </label>
+      <div class="field-row">
+        <label class="field"><span>平时出发</span><input id="inDepart" type="time" step="300"></label>
+        <label class="field"><span>期望到达</span><input id="inArrive" type="time" step="300"></label>
+      </div>
+      <label class="field">
+        <span>停车 / 步行缓冲（分钟）</span>
+        <input id="inBuffer" type="number" min="0" max="30" step="1">
+      </label>
+      <p class="form-msg" id="formMsg"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn text" id="btnRestore">恢复示例</button>
+      <div class="grow"></div>
+      <button class="btn ghost dark" data-close>取消</button>
+      <button class="btn primary" id="btnSave">保存并重算</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/snapshot.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/predict.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
