@@ -85,6 +85,13 @@ python3 -m http.server 8080
 
 > 也可以直接双击 `index.html`。首次加载会请求高德接口；若网络受限，会自动使用 `assets/js/snapshot.js` 中的构建期快照。
 
+### 单文件版（一个 HTML）
+
+```bash
+node scripts/build-standalone.mjs
+# 生成 dist/commute-oracle.html（CSS / JS / 快照全部内联，可直接双击或上传）
+```
+
 ### 重新生成数据快照
 
 ```bash
@@ -116,6 +123,7 @@ node scripts/agent-morning.mjs
 │       ├── map.js              # JS API 2.0 地图封装
 │       └── app.js              # 渲染与交互
 ├── data/fallback-snapshot.json # 高德原始返回留档
+├── dist/commute-oracle.html    # 单文件构建（可离线打开）
 ├── doc/
 │   ├── PLAN.md                 # 方案文档（Markdown）
 │   ├── plan.html               # 方案文档（可打印 Q 版）
@@ -125,6 +133,7 @@ node scripts/agent-morning.mjs
 │   └── screenshots/            # 演示截图
 ├── scripts/
 │   ├── snapshot.mjs            # 生成快照
+│   ├── build-standalone.mjs    # 打包单文件 HTML
 │   └── agent-morning.mjs       # amap-gui / REST 巡航
 └── README.md
 ```
